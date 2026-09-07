@@ -73,7 +73,11 @@ section{margin-bottom:20px}
   letter-spacing:.3px;height:14px}
 .nhan-cot .n.on{color:var(--chon);font-weight:700}
 
-/* ---------- vòng bánh xe ---------- */
+/* ---------- bánh xe tròn ---------- */
+.tron{display:block;width:100%;max-width:330px;margin:0 auto;height:auto}
+.tron text{font-family:inherit;font-variant-numeric:tabular-nums}
+
+/* ---------- vòng bánh xe dạng dải ---------- */
 .wheel{display:flex;gap:2px;min-width:660px}
 .wo{flex:1;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;
   font-size:11px;font-weight:600;background:var(--panel-2);color:var(--nga-mo);border:1px solid var(--line)}
@@ -551,6 +555,55 @@ function veBan(che, vung){
   }
   return '<div class="ban-wrap">' + nhanCot + h + "</div></div></div>";
 }
+/* Bánh xe tròn 37 ô đúng thứ tự vật lý. Vùng hàng xóm hiện thành cung liền mạch,
+   kể cả khi vắt qua ô 0 — điều mà dải ngang không thể hiện đúng được.               */
+function veWheelTron(vung){
+  const CX = 180, CY = 180, R_NGOAI = 172, R_BAND = 158, R_O = 152, R_TRONG = 104, R_CHU = 128;
+  const B = 360 / NS;
+  const nhom = new Map(), tamCua = new Map();
+  if (vung) vung.vung.forEach((v,i) => { v.cac.forEach(x => nhom.set(x, i)); tamCua.set(v.tam, i); });
+  const mauVung = i => ["var(--cung)","var(--cung2)","var(--cung3)","var(--cung4)"][i] || "var(--cung)";
+  const chuTam  = i => ["#3D2A00","#25103F","#062B38","#3D0A16"][i] || "#3D2A00";
+
+  const diem = (r, a) => {
+    const t = (a - 90) * Math.PI / 180;
+    return [(CX + r*Math.cos(t)).toFixed(2), (CY + r*Math.sin(t)).toFixed(2)];
+  };
+  const cung = (r1, r2, a1, a2) => {
+    const [x1,y1] = diem(r2,a1), [x2,y2] = diem(r2,a2);
+    const [x3,y3] = diem(r1,a2), [x4,y4] = diem(r1,a1);
+    return "M" + x1 + " " + y1 + "A" + r2 + " " + r2 + " 0 0 1 " + x2 + " " + y2 +
+           "L" + x3 + " " + y3 + "A" + r1 + " " + r1 + " 0 0 0 " + x4 + " " + y4 + "Z";
+  };
+
+  let h = '<svg class="tron" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">';
+  h += '<circle cx="180" cy="180" r="174" fill="none" stroke="var(--line)" stroke-width="1"/>';
+  WHEEL.forEach((m, i) => {
+    const a1 = i*B, a2 = (i+1)*B, giua = a1 + B/2;
+    const laTam = tamCua.has(m), v = nhom.get(m);
+    const nen = laTam ? mauVung(tamCua.get(m))
+                      : (m === 0 ? "var(--zero)" : (DO.has(m) ? "var(--do)" : "var(--den)"));
+    h += '<path d="' + cung(R_TRONG, R_O, a1, a2) + '" fill="' + nen +
+         '" stroke="var(--ni)" stroke-width="1"/>';
+    if (v !== undefined)
+      h += '<path d="' + cung(R_BAND, R_NGOAI, a1+0.4, a2-0.4) + '" fill="' + mauVung(v) + '"/>';
+    let xoay = giua;
+    if (giua > 90 && giua < 270) xoay = giua + 180;
+    const [tx, ty] = diem(R_CHU, giua);
+    h += '<text x="' + tx + '" y="' + ty + '" text-anchor="middle" dominant-baseline="central" ' +
+         'font-size="' + (laTam ? 13 : 11) + '" font-weight="' + (laTam ? 800 : 600) + '" fill="' +
+         (laTam ? chuTam(tamCua.get(m)) : "#fff") + '" transform="rotate(' + xoay.toFixed(1) +
+         ' ' + tx + ' ' + ty + ')">' + m + "</text>";
+  });
+  const phu = vung ? vung.phu : 0;
+  h += '<circle cx="180" cy="180" r="' + (R_TRONG-4) + '" fill="var(--panel)" stroke="var(--line)"/>';
+  h += '<text x="180" y="168" text-anchor="middle" font-size="13" fill="var(--nga-mo)">phủ</text>';
+  h += '<text x="180" y="196" text-anchor="middle" font-size="30" font-weight="700" fill="var(--nga)">' +
+       phu + "</text>";
+  h += '<text x="180" y="216" text-anchor="middle" font-size="12" fill="var(--nga-mo)">/ 37 ô</text>';
+  return h + "</svg>";
+}
+
 function veWheel(vung){
   const nhom = new Map(), tamCua = new Map();
   if (vung) vung.vung.forEach((v,i) => { v.cac.forEach(x => nhom.set(x, i)); tamCua.set(v.tam, i); });
@@ -663,11 +716,11 @@ function ve(){
         ? " Hai tâm chỉ cách " + vung.khoang + " ô, nhiệt đang dồn về một chỗ."
         : " Hai tâm cách " + vung.khoang + " ô, hai vùng tách rời thật sự.";
     a += "<section><h2>" + vung.vung.length + " vùng \u00d7 " + cfg.CO_VUNG + " ô, phủ " +
-      phuC + " số</h2><div class=\"doi-cot\">" +
-      '<div><div class="nhan-nho">Bánh xe châu Âu, 37 ô theo thứ tự vật lý</div>' +
-      veWheel(vung) + "</div>" +
-      '<div><div class="nhan-nho">Vị trí trên bàn cược</div>' + veBan(null, vung) + "</div>" +
-      "</div><div class=\"dien-giai\">" + ds + "." + ghi + "</div></section>";
+      phuC + " số</h2>" + veWheelTron(vung) +
+      '<div class="nhan-nho" style="margin-top:12px">Cùng dữ liệu, trải phẳng theo thứ tự bánh xe</div>' +
+      veWheel(vung) +
+      "<div class=\"dien-giai\">" + ds + "." + ghi +
+      " Ô tô đậm là tâm mỗi vùng, vành ngoài đánh dấu toàn bộ ô thuộc vùng.</div></section>";
     a += khoiTyLe("Tỷ lệ chính xác của vùng hàng xóm", r.trungCung, r.vao, phuC, cfg.CUOC);
   } else a = '<div class="trong">Chưa đủ dữ liệu để dựng vùng.</div>';
   $("khoiNb").innerHTML = a;
@@ -679,7 +732,7 @@ function ve(){
     '<div><div class="nhan-nho">Bàn cược, 6 street tô xanh</div>' +
     veBan(cheStreets, vung) + "</div>" +
     '<div><div class="nhan-nho">Bánh xe châu Âu, 37 ô theo thứ tự vật lý</div>' +
-    veWheel(vung) + "</div></div>" +
+    veWheelTron(vung) + "</div></div>" +
     '<div class="chu-thich">' +
     '<span><i style="background:var(--chon)"></i>street được chọn</span>' +
     '<span><i style="background:var(--cung)"></i>tâm vùng 1</span>' +
