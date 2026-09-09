@@ -7,28 +7,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Roulette">
-<title>Roulette — 6 engine độc lập chọn 6 street</title>
+<meta name="apple-mobile-web-app-title" content="Roulette 12">
+<title>Roulette — hồ 12 engine, khoá đội hình 6</title>
 <style>
 :root{
-  --ni:#0C1811;         /* nỉ bàn */
-  --panel:#132419;
-  --panel-2:#1A2E20;
-  --line:#20382A;
-  --nga:#E9E6DB;
-  --nga-mo:#8A9990;
-  --do:#C4302B;         /* số đỏ */
-  --den:#252525;        /* số đen */
-  --zero:#0E7A42;
-  --chon:#2BE07A;       /* street được chọn */
-  --chon-tram:#0A3D22;
-  --cung:#F2B441;       /* vùng hàng xóm 1 */
-  --cung2:#B98CF5;      /* vùng hàng xóm 2 */
-  --cung3:#4FC3E8;      /* vùng hàng xóm 3 */
-  --cung4:#FF8FA3;      /* vùng hàng xóm 4 */
-  --dung:#2BE07A;
-  --sai:#3A4A40;
-  --r:10px;
+  --ni:#0C1811; --panel:#132419; --panel-2:#1A2E20; --line:#20382A;
+  --nga:#E9E6DB; --nga-mo:#8A9990;
+  --do:#C4302B; --den:#252525; --zero:#0E7A42;
+  --chon:#2BE07A; --chon-tram:#0A3D22;
+  --vang:#F2B441; --lam:#4FC3E8;
+  --dung:#2BE07A; --sai:#3A4A40; --r:10px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -39,80 +27,75 @@ body{background:var(--ni);color:var(--nga);
 h1{font-size:17px;font-weight:600;margin:0}
 h2{font-size:13px;font-weight:600;color:var(--nga-mo);margin:0 0 8px}
 section{margin-bottom:20px}
-.muted{color:var(--nga-mo)}
-.small{font-size:12px}
-.tiny{font-size:11px}
+.muted{color:var(--nga-mo)} .small{font-size:12px} .tiny{font-size:11px}
 .top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
 .dem b{font-size:22px}
 
-/* ---------- bàn cược mô phỏng ---------- */
-.ban-wrap{overflow-x:auto;padding-bottom:4px}
-.ban{display:flex;gap:3px;min-width:520px}
-.o-zero{width:38px;display:flex;align-items:center;justify-content:center;background:var(--zero);
-  border-radius:6px;font-weight:700;font-size:15px;color:#fff;cursor:pointer;user-select:none;
-  touch-action:manipulation}
+/* ---------- thanh giai đoạn ---------- */
+.pha{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;margin-bottom:16px}
+.pha .ten{font-size:12px;color:var(--nga-mo)}
+.pha .lon{font-size:20px;font-weight:700;margin:3px 0 8px}
+.thanh{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.thanh > div{height:100%;background:var(--vang);transition:width .25s}
+.thanh.xong > div{background:var(--chon)}
+
+.hop{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.so-lieu{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:13px}
+.so-lieu .nhan{font-size:11px;color:var(--nga-mo)}
+.so-lieu .gt{font-size:18px;font-weight:600;margin-top:2px}
+.dien-giai{font-size:12px;color:var(--nga-mo);line-height:1.65;margin-top:10px}
+
+/* ---------- bàn cược ---------- */
+.ban-wrap{overflow-x:auto;padding-bottom:4px;margin-top:12px}
+.ban{display:flex;gap:3px;min-width:500px}
+.o-zero{width:36px;display:flex;align-items:center;justify-content:center;background:var(--zero);
+  border-radius:6px;font-weight:700;font-size:15px;color:#fff;user-select:none;touch-action:manipulation}
 .cot-wrap{display:flex;gap:3px;flex:1}
 .cot{flex:1;display:flex;flex-direction:column;gap:3px}
-.so{height:34px;display:flex;align-items:center;justify-content:center;border-radius:5px;
-  font-size:13px;font-weight:600;color:#fff;cursor:pointer;user-select:none;
-  touch-action:manipulation;border:1.5px solid transparent}
-.so.do{background:var(--do)}
-.so.den{background:var(--den);border-color:#3A3A3A}
+.so{height:33px;display:flex;align-items:center;justify-content:center;border-radius:5px;
+  font-size:13px;font-weight:600;color:#fff;user-select:none;touch-action:manipulation;
+  border:1.5px solid transparent}
+.so.do{background:var(--do)} .so.den{background:var(--den);border-color:#3A3A3A}
 .so.sang{background:var(--chon);color:#06301A;border-color:#7CF5B4}
-.so.cung{box-shadow:inset 0 0 0 2px var(--cung)}
-.so.cung2{box-shadow:inset 0 0 0 2px var(--cung2)}
-.so.tam{background:var(--cung);color:#3D2A00;border-color:#FFE0A0}
-.so.tam2{background:var(--cung2);color:#25103F;border-color:#DCC2FF}
-.so.cung3{box-shadow:inset 0 0 0 2px var(--cung3)}
-.so.tam3{background:var(--cung3);color:#062B38;border-color:#B6E7F7}
-.so.cung4{box-shadow:inset 0 0 0 2px var(--cung4)}
-.so.tam4{background:var(--cung4);color:#3D0A16;border-color:#FFD0D9}
-.nhan-cot{display:flex;gap:3px;min-width:520px;margin-bottom:4px}
-.nhan-cot .sp{width:38px;flex:0 0 38px}
-.nhan-cot .n{flex:1;text-align:center;font-size:10px;color:var(--nga-mo);
-  letter-spacing:.3px;height:14px}
+.nhan-cot{display:flex;gap:3px;min-width:500px;margin-bottom:4px}
+.nhan-cot .sp{width:36px;flex:0 0 36px}
+.nhan-cot .n{flex:1;text-align:center;font-size:10px;color:var(--nga-mo);height:14px}
 .nhan-cot .n.on{color:var(--chon);font-weight:700}
 
-/* ---------- bánh xe tròn ---------- */
-.tron{display:block;width:100%;max-width:330px;margin:0 auto;height:auto}
-.tron text{font-family:inherit;font-variant-numeric:tabular-nums}
+/* ---------- chuỗi ---------- */
+.chuoi{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.vien-so{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:600;color:#fff}
+.vien-so.do{background:var(--do)} .vien-so.den{background:var(--den);border:1px solid #3A3A3A}
+.vien-so.zero{background:var(--zero)}
+.vien-so.cuoi{outline:2px solid var(--nga);outline-offset:1px}
 
-/* ---------- vòng bánh xe dạng dải ---------- */
-.wheel{display:flex;gap:2px;min-width:660px}
-.wo{flex:1;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;
-  font-size:11px;font-weight:600;background:var(--panel-2);color:var(--nga-mo);border:1px solid var(--line)}
-.wo.in{background:#3A2E10;color:#F7D897;border-color:#6B520F}
-.wo.mid{background:var(--cung);color:#3D2A00;border-color:#FFE0A0;font-weight:700}
-.wo.in2{background:#2C2144;color:#DCC2FF;border-color:#54408A}
-.wo.mid2{background:var(--cung2);color:#25103F;border-color:#DCC2FF;font-weight:700}
-.wo.in3{background:#152F3A;color:#B6E7F7;border-color:#2F6D85}
-.wo.mid3{background:var(--cung3);color:#062B38;border-color:#B6E7F7;font-weight:700}
-.wo.in4{background:#3A1A22;color:#FFD0D9;border-color:#7A3543}
-.wo.mid4{background:var(--cung4);color:#3D0A16;border-color:#FFD0D9;font-weight:700}
-
-/* ---------- khối ---------- */
-.hop{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
-.so-lieu{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px}
-.so-lieu .nhan{font-size:11px;color:var(--nga-mo)}
-.so-lieu .gt{font-size:19px;font-weight:600;margin-top:2px}
-.dien-giai{font-size:12px;color:var(--nga-mo);line-height:1.65;margin-top:10px}
+/* ---------- bảng ---------- */
 table{width:100%;border-collapse:collapse}
 th{font-size:11px;font-weight:500;color:var(--nga-mo);text-align:left;padding:0 6px 7px;white-space:nowrap}
 td{padding:8px 6px;border-top:1px solid var(--line);vertical-align:middle}
+tr.trong-doi td{background:rgba(43,224,122,.07)}
 .ten-e{font-size:13px;font-weight:500}
 .ghi{font-size:11px;color:var(--nga-mo);margin-top:1px}
+.nhan-bo{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px;
+  vertical-align:1px}
+.nhan-bo.cu{background:rgba(242,180,65,.15);color:var(--vang)}
+.nhan-bo.moi{background:rgba(79,195,232,.15);color:var(--lam)}
 .vien{display:inline-block;background:var(--chon-tram);color:var(--chon);border:1px solid var(--chon);
   border-radius:5px;padding:2px 8px;font-size:12px;font-weight:700;white-space:nowrap}
-.mach{font-size:16px;font-weight:700}
-.mach.im{color:var(--nga-mo);font-weight:400}
+.mach{font-size:16px;font-weight:700} .mach.im{color:var(--nga-mo);font-weight:400}
 .cham{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:3px}
-.cham.d{background:var(--dung)}.cham.s{background:var(--sai)}
+.cham.d{background:var(--dung)} .cham.s{background:var(--sai)}
 
-/* ---------- điều khiển ---------- */
 .hang-nut{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .nut{background:var(--panel-2);color:var(--nga);border:1px solid var(--line);border-radius:7px;
   padding:9px 14px;font:inherit;font-size:13px;cursor:pointer}
 .nut:hover{border-color:var(--nga-mo)}
+.nut.canh{border-color:var(--do);color:#F3A9A6}
+.nut-gap{background:none;border:0;color:var(--nga-mo);font:inherit;font-size:12px;cursor:pointer;
+  padding:6px 0;text-decoration:underline}
+.nut-gap:hover{color:var(--nga)}
 .cai-dat{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:var(--nga-mo)}
 .cai-dat label{display:flex;align-items:center;gap:7px}
 input,textarea{background:var(--panel-2);color:var(--nga);border:1px solid var(--line);
@@ -121,50 +104,17 @@ input[type=number]{width:88px}
 textarea{width:100%;height:56px;resize:vertical;line-height:1.7}
 .trong{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;
   text-align:center;color:var(--nga-mo);font-size:13px;line-height:1.7}
-.chu-thich{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--nga-mo);margin-top:8px}
-.chu-thich i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;
-  vertical-align:-1px;font-style:normal}
-
-/* ---------- chọn phương án ---------- */
-.che-do{display:flex;gap:8px;margin-bottom:18px}
-.che{flex:1;padding:13px 10px;border-radius:var(--r);border:1px solid var(--line);
-  background:var(--panel);color:var(--nga-mo);font:inherit;font-size:14px;font-weight:600;
-  cursor:pointer;touch-action:manipulation}
-.che.on{background:var(--chon-tram);border-color:var(--chon);color:var(--chon)}
-.che small{display:block;font-size:11px;font-weight:400;opacity:.8;margin-top:2px}
-
-/* ---------- bàn cược + bánh xe nằm cạnh nhau ---------- */
-.doi-cot{display:flex;gap:14px;flex-wrap:wrap}
-.doi-cot > div{flex:1 1 340px;min-width:0}
-.nhan-nho{font-size:11px;color:var(--nga-mo);margin-bottom:5px}
-
-/* ---------- chuỗi kết quả dưới ô nhập ---------- */
-.chuoi{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
-.vien-so{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:11px;font-weight:600;color:#fff}
-.vien-so.do{background:var(--do)}
-.vien-so.den{background:var(--den);border:1px solid #3A3A3A}
-.vien-so.zero{background:var(--zero)}
-.vien-so.cuoi{outline:2px solid var(--nga);outline-offset:1px}
-.nut-gap{background:none;border:0;color:var(--nga-mo);font:inherit;font-size:12px;
-  cursor:pointer;padding:4px 0;text-decoration:underline}
-.nut-gap:hover{color:var(--nga)}
 </style>
 </head>
 <body>
 
 <div class="top">
-  <h1>Roulette — bánh xe châu Âu</h1>
+  <h1>Roulette — hồ 12 engine</h1>
   <div class="dem"><b id="soVong">0</b><span class="muted"> vòng</span></div>
 </div>
 
-<div class="che-do">
-  <button class="che" id="btnNb" onclick="doiCheDo('nb')">Neighbour<small>vùng liền kề trên bánh xe</small></button>
-  <button class="che" id="btnSt" onclick="doiCheDo('st')">6 Street<small>18 số trên bàn cược</small></button>
-</div>
-
-<div id="khoiNb"></div>
-<div id="khoiSt"></div>
+<div id="khoiPha"></div>
+<div id="khoiChoi"></div>
 
 <section>
   <h2>Nhập kết quả vòng quay</h2>
@@ -172,7 +122,7 @@ textarea{width:100%;height:56px;resize:vertical;line-height:1.7}
   <div id="chuoiKq"></div>
   <div class="hang-nut">
     <button class="nut" onclick="xoa1()">Xoá vòng cuối</button>
-    <button class="nut" onclick="phienMoi()">Phiên mới</button>
+    <button class="nut canh" onclick="banMoi()">Reset bàn chơi mới</button>
     <button class="nut" onclick="hienSua()" id="nutSua">Sửa cả chuỗi</button>
   </div>
   <div id="khoiSua" style="display:none;margin-top:10px">
@@ -181,335 +131,367 @@ textarea{width:100%;height:56px;resize:vertical;line-height:1.7}
   </div>
 </section>
 
+<div id="khoiHo"></div>
+
 <section>
   <h2>Cài đặt</h2>
   <div class="cai-dat">
-    <label>Bắt đầu chọn từ vòng
-      <input type="number" id="oBatDau" value="60" min="20" max="400" onchange="ve()"></label>
-    <label>Số vùng hàng xóm
-      <input type="number" id="oSoVung" value="2" min="1" max="4" onchange="ve()"></label>
-    <label>Số ô mỗi vùng
-      <input type="number" id="oCoVung" value="9" min="3" max="18" onchange="ve()"></label>
-    <label>Tiền cược mỗi số
+    <label>Khởi động (vòng)
+      <input type="number" id="oKhoiDong" value="40" min="20" max="200" onchange="ve()"></label>
+    <label>Sơ loại (vòng)
+      <input type="number" id="oSoLoai" value="60" min="20" max="500" onchange="ve()"></label>
+    <label>Cược gốc mỗi street
       <input type="number" id="oCuoc" value="50000" step="10000" onchange="ve()"></label>
+    <label>Ngưỡng chuỗi thua
+      <input type="number" id="oNguong" value="3" min="1" max="9" onchange="ve()"></label>
+    <label>Trần bàn mỗi street
+      <input type="number" id="oTran" value="2000000" step="500000" onchange="ve()"></label>
   </div>
   <p class="small muted" style="margin:10px 0 0">
-    Cả hai phương án đều lời lỗ ±100% tiền đặt mỗi vòng. Trên bánh xe cân, mọi cỡ phủ
-    đều cho đúng âm 2,70%. Chuỗi được lưu trong trình duyệt.
+    Hồ có 12 engine. Sau khởi động, tất cả cùng chạy trong giai đoạn sơ loại. Hết sơ loại,
+    code duyệt toàn bộ 924 tổ hợp 6-trong-12, chấm theo kết quả của cả đội chứ không cộng điểm
+    từng engine, rồi khoá đội hình tốt nhất cho đến khi bạn reset.
   </p>
 </section>
 
 <section>
   <h2>Bánh xe này có lệch không</h2>
   <div id="khoiChi2"></div>
-  <div class="hang-nut">
-    <button class="nut" onclick="doNguongNhieu()" id="nutNhieu">Đo ngưỡng nhiễu</button>
-  </div>
-  <div id="ketQuaNhieu"></div>
 </section>
 
 <script>
 "use strict";
 /* =====================================================================================
-   PHẦN 1 — HÌNH HỌC BÁNH XE VÀ BÀN CƯỢC
+   PHẦN 1 — HÌNH HỌC
    ===================================================================================== */
 const WHEEL = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,
                14,31,9,22,18,29,7,28,12,35,3,26];
-const NS = WHEEL.length;                       // 37
+const NS = WHEEL.length;
 const POS = {}; WHEEL.forEach((n,i) => POS[n] = i);
 const DO = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
-const STREETS = [];
-for (let k = 0; k < 12; k++) STREETS.push([3*k+1, 3*k+2, 3*k+3]);
-const ST_OF = {};
-STREETS.forEach((s,k) => s.forEach(n => ST_OF[n] = k));
-const P_ST = 3/37;                             // xác suất 1 street
-const SO_CUNG = 18;                            // vùng hàng xóm 18 số
-
-const modv = (i,m) => ((i % m) + m) % m;
+const STREETS = []; for (let k = 0; k < 12; k++) STREETS.push([3*k+1,3*k+2,3*k+3]);
+const ST_OF = {}; STREETS.forEach((s,k) => s.forEach(n => ST_OF[n] = k));
+const P_ST = 3/37;
+const modv = (i,m) => ((i%m)+m)%m;
+const k12 = () => new Array(12).fill(0);
+const chieu = d => STREETS.map(s => s.reduce((a,m) => a + d[POS[m]], 0));
+const COS = [], SIN = [];
+for (let k = 0; k <= 3; k++){
+  COS[k] = []; SIN[k] = [];
+  for (let i = 0; i < NS; i++){ const t = 2*Math.PI*k*i/NS; COS[k][i] = Math.cos(t); SIN[k][i] = Math.sin(t); }
+}
 
 /* =====================================================================================
    PHẦN 2 — TRẠNG THÁI TÍCH LUỸ
-   Cập nhật từng vòng thay vì quét lại toàn bộ lịch sử, để phát lại 5000 vòng vẫn nhanh.
    ===================================================================================== */
-const HL = 40;                                 // nửa đời của engine Recency
-const PHAN_RA = Math.pow(0.5, 1/HL);
-
+const HL = 40, PHAN_RA = Math.pow(0.5, 1/HL);
 function ttMoi(){
-  return {n:0, dem:new Array(37).fill(0), st:new Array(12).fill(0),
-          rw:new Array(12).fill(0), rt:0,
-          mk:Array.from({length:12}, () => new Array(12).fill(0)), cuoi:-1};
+  return {n:0, dem:new Array(NS).fill(0), st:k12(), rw:k12(), rt:0,
+          mk:Array.from({length:12}, () => k12()), cuoiSt:-1,
+          gap:new Array(NS).fill(0), cuoiO:-1,
+          lichSu:[], demNua:new Array(NS).fill(0), nNua:0};
 }
 function ttCapNhat(tt, so){
-  tt.n++;
-  tt.dem[POS[so]]++;
+  const p = POS[so];
+  if (tt.cuoiO >= 0) tt.gap[modv(p - tt.cuoiO, NS)]++;
+  tt.cuoiO = p; tt.dem[p]++; tt.n++; tt.lichSu.push(p);
   for (let k = 0; k < 12; k++) tt.rw[k] *= PHAN_RA;
-  tt.rt *= PHAN_RA;
-  tt.rt += 1;
+  tt.rt = tt.rt*PHAN_RA + 1;
   const k = (so in ST_OF) ? ST_OF[so] : -1;
   if (k >= 0){
-    tt.st[k]++;
-    tt.rw[k] += 1;
-    if (tt.cuoi >= 0) tt.mk[tt.cuoi][k]++;
-    tt.cuoi = k;
+    tt.st[k]++; tt.rw[k] += 1;
+    if (tt.cuoiSt >= 0) tt.mk[tt.cuoiSt][k]++;
+    tt.cuoiSt = k;
   }
-}
-function ttSaoChep(tt){
-  return {n:tt.n, dem:tt.dem.slice(), st:tt.st.slice(), rw:tt.rw.slice(), rt:tt.rt,
-          mk:tt.mk.map(r => r.slice()), cuoi:tt.cuoi};
+  const nua = Math.floor(tt.n/2);
+  while (tt.nNua < nua){ tt.demNua[tt.lichSu[tt.nNua]]++; tt.nNua++; }
 }
 
 /* =====================================================================================
-   PHẦN 3 — SÁU ENGINE ĐỘC LẬP
-   Mỗi engine chấm điểm cả 12 street. Điểm dương nghĩa là street đó đang trội hơn kỳ vọng.
-   Không engine nào dùng chung công cụ với engine nào.
+   PHẦN 3 — HỒ 12 ENGINE
    ===================================================================================== */
-
-/* 1. Chi bình phương trên 37 ô — công cụ chuẩn để dò bánh xe lệch vật lý.
-      Điểm street = tổng phần dư chuẩn hoá (obs-exp)/√exp của 3 số trong street.      */
-function eChi2(tt){
-  if (tt.n < 40) return new Array(12).fill(0);
-  const exp = tt.n / NS, se = Math.sqrt(exp);
-  const res = new Array(37);
-  for (let i = 0; i < NS; i++) res[POS[WHEEL[i]]] = (tt.dem[i] - exp) / se;
-  return STREETS.map(s => s.reduce((a,m) => a + res[POS[m]], 0));
+/* --- sáu công cụ tần suất --- */
+function cChi2(tt){
+  if (tt.n < 40) return k12();
+  const e = tt.n/NS, se = Math.sqrt(e), r = new Array(NS);
+  for (let i = 0; i < NS; i++) r[i] = (tt.dem[i] - e)/se;
+  return chieu(r);
 }
-
-/* 2. Nhiệt vùng bánh xe — lệch vật lý xuất hiện thành cung liền kề chứ không phải ô lẻ.
-      Làm mượt tần suất theo vòng tròn với cửa sổ ±3 ô rồi chiếu xuống street.          */
-function eSector(tt, bk){
-  bk = bk || 3;
-  if (tt.n < 40) return new Array(12).fill(0);
-  const tb = tt.n / NS, muot = new Array(NS);
+function cSector(tt){
+  if (tt.n < 40) return k12();
+  const bk = 3, tb = tt.n/NS, m = new Array(NS);
   for (let i = 0; i < NS; i++){
-    let s = 0;
-    for (let d = -bk; d <= bk; d++) s += tt.dem[modv(i+d, NS)];
-    muot[i] = s / (2*bk + 1);
+    let s = 0; for (let d = -bk; d <= bk; d++) s += tt.dem[modv(i+d,NS)];
+    m[i] = (s/(2*bk+1) - tb)/Math.max(tb,1e-9);
   }
-  return STREETS.map(s => s.reduce((a,m) => a + (muot[POS[m]] - tb) / Math.max(tb,1e-9), 0));
+  return chieu(m);
 }
-
-/* 3. Tần suất 12 street, kéo về đồng đều bằng prior Dirichlet.
-      Mẫu càng nhỏ càng bị kéo mạnh, nên nó im lặng khi chưa có đủ dữ liệu.            */
-function eFreq(tt, alpha){
-  alpha = alpha || 36;
-  const out = [];
-  for (let k = 0; k < 12; k++){
-    const p = (tt.st[k] + alpha*P_ST) / (tt.n + alpha);
-    out.push((p - P_ST) / P_ST);
-  }
-  return out;
+function cFreq(tt){
+  const a = 36, o = [];
+  for (let k = 0; k < 12; k++) o.push(((tt.st[k] + a*P_ST)/(tt.n + a) - P_ST)/P_ST);
+  return o;
 }
-
-/* 4. Nhiệt gần đây — trọng số giảm mũ, nửa đời 40 vòng.
-      Đây là thứ người chơi làm bằng mắt khi nhìn bảng điện tử, được hình thức hoá.     */
-function eRecency(tt){
-  if (tt.n < 20 || tt.rt <= 0) return new Array(12).fill(0);
-  return tt.rw.map(w => (w/tt.rt - P_ST) / P_ST);
+function cRecency(tt){
+  if (tt.n < 20 || tt.rt <= 0) return k12();
+  return tt.rw.map(w => (w/tt.rt - P_ST)/P_ST);
 }
-
-/* 5. Cặp hàng xóm — dò lệch hẹp, kiểu một khe ngăn bị lỏng làm 2 ô kề nhau cùng nóng.
-      Chấm điểm từng cặp ô liền kề trên bánh xe, rồi cộng vào 2 ô thành viên.
-      Khác engine 2 ở độ phân giải: ±1 thay vì ±3.                                     */
-function eNeighbourPairs(tt){
-  if (tt.n < 40) return new Array(12).fill(0);
-  const expC = 2 * tt.n / NS, seC = Math.sqrt(expC);
-  const diemO = new Array(NS).fill(0);
+function cPairs(tt){
+  if (tt.n < 40) return k12();
+  const e = 2*tt.n/NS, se = Math.sqrt(e), d = new Array(NS).fill(0);
   for (let i = 0; i < NS; i++){
-    const j = modv(i+1, NS);
-    const z = (tt.dem[i] + tt.dem[j] - expC) / seC;
-    diemO[i] += z; diemO[j] += z;
+    const j = modv(i+1,NS), z = (tt.dem[i] + tt.dem[j] - e)/se;
+    d[i] += z; d[j] += z;
   }
-  return STREETS.map(s => s.reduce((a,m) => a + diemO[POS[m]], 0));
+  return chieu(d);
 }
-
-/* 6. Markov bậc 1 trên chuỗi 12 street — street vừa ra làm khoá.                      */
-function eMarkov(tt, alpha){
-  alpha = alpha || 24;
-  if (tt.cuoi < 0) return new Array(12).fill(0);
-  const hang = tt.mk[tt.cuoi];
-  let n = 0; for (const v of hang) n += v;
-  if (n < 8) return new Array(12).fill(0);
-  return hang.map(v => ((v + alpha/12) / (n + alpha) - 1/12) * 12);
+function cMarkov(tt){
+  if (tt.cuoiSt < 0) return k12();
+  const h = tt.mk[tt.cuoiSt], a = 24;
+  let n = 0; for (const v of h) n += v;
+  if (n < 8) return k12();
+  return h.map(v => ((v + a/12)/(n + a) - 1/12)*12);
 }
-
-const ENGINES = [
-  {ten:"Chi2Bias",       ma:"CHI", f:eChi2,           mo:"chi bình phương 37 ô"},
-  {ten:"SectorHeat",     ma:"SEC", f:eSector,         mo:"nhiệt cung bánh xe ±3 ô"},
-  {ten:"StreetFreq",     ma:"FRQ", f:eFreq,           mo:"tần suất street có shrink"},
-  {ten:"Recency",        ma:"REC", f:eRecency,        mo:"nhiệt gần đây, nửa đời 40"},
-  {ten:"NeighbourPairs", ma:"NBR", f:eNeighbourPairs, mo:"cặp ô kề nhau cùng nóng"},
-  {ten:"Markov",         ma:"MKV", f:eMarkov,         mo:"chuyển tiếp street bậc 1"}
-];
-const TEN_E = ENGINES.map(e => e.ten);
-
-/* Bốc tuần tự: engine 1 lấy street điểm cao nhất, engine 2 lấy cao nhất trong phần còn
-   lại, cứ thế. Ra đúng 6 street riêng biệt, mỗi engine sở hữu một street.             */
-function chonSau(tt){
-  const lay = new Set(), ra = [];
-  for (const e of ENGINES){
-    const d = e.f(tt);
-    let tot = -1, diem = -Infinity;
-    for (let k = 0; k < 12; k++){
-      if (!lay.has(k) && d[k] > diem){ diem = d[k]; tot = k; }
+/* --- sáu cơ chế vật lý --- */
+function mHarmonic(tt){
+  const n = tt.n;
+  if (n < 80) return k12();
+  const f = new Array(NS).fill(0); let co = false;
+  for (let k = 1; k <= 3; k++){
+    let a = 0, b = 0;
+    for (let i = 0; i < NS; i++){ a += tt.dem[i]*COS[k][i]; b += tt.dem[i]*SIN[k][i]; }
+    const cs = 2*(a*a + b*b)/n;
+    if (cs < 5.99) continue;
+    co = true;
+    const gi = Math.min(1, (cs - 5.99)/cs);
+    for (let i = 0; i < NS; i++) f[i] += gi*2*(a*COS[k][i] + b*SIN[k][i])/n;
+  }
+  return co ? chieu(f) : k12();
+}
+function mPocket(tt){
+  const n = tt.n;
+  if (n < 80) return k12();
+  const e = n/NS; let chi = 0;
+  for (let i = 0; i < NS; i++){ const d = tt.dem[i] - e; chi += d*d/e; }
+  const lam = Math.max(0, 1 - (NS-1)/Math.max(chi,1e-9));
+  if (lam <= 0) return k12();
+  const f = new Array(NS);
+  for (let i = 0; i < NS; i++) f[i] = lam*(tt.dem[i]/n - 1/NS);
+  return chieu(f);
+}
+function mAdaptive(tt){
+  const n = tt.n;
+  if (n < 100) return k12();
+  const tongCuaSo = h => {
+    const S = new Array(NS); let s0 = 0;
+    for (let d = -h; d <= h; d++) s0 += tt.dem[modv(d,NS)];
+    S[0] = s0;
+    for (let i = 1; i < NS; i++) S[i] = S[i-1] - tt.dem[modv(i-1-h,NS)] + tt.dem[modv(i+h,NS)];
+    return S;
+  };
+  let bh = 3, bll = -Infinity, bS = null;
+  for (const h of [1,2,3,5,8]){
+    const S = tongCuaSo(h); let ll = 0;
+    for (let i = 0; i < NS; i++){
+      if (!tt.dem[i]) continue;
+      ll += tt.dem[i]*Math.log(Math.max((S[i] - tt.dem[i])/(2*h)/n, 1e-6));
     }
-    if (tot < 0) for (let k = 0; k < 12; k++) if (!lay.has(k)){ tot = k; diem = 0; break; }
-    lay.add(tot);
-    ra.push({ten:e.ten, ma:e.ma, street:tot, diem:diem});
+    if (ll > bll){ bll = ll; bh = h; bS = S; }
+  }
+  const tb = n/NS, f = new Array(NS);
+  for (let i = 0; i < NS; i++) f[i] = (bS[i]/(2*bh+1) - tb)/tb;
+  return chieu(f);
+}
+function mDealerGap(tt){
+  if (tt.n < 80 || tt.cuoiO < 0) return k12();
+  const a = 18.5, tong = tt.n - 1, f = new Array(NS).fill(0);
+  for (let g = 0; g < NS; g++)
+    f[modv(tt.cuoiO + g, NS)] = (tt.gap[g] + a/NS)/(tong + a) - 1/NS;
+  return chieu(f);
+}
+function mGapKernel(tt){
+  if (tt.n < 120 || tt.cuoiO < 0) return k12();
+  const h = 2, a = 18.5, tong = tt.n - 1, f = new Array(NS).fill(0);
+  for (let g = 0; g < NS; g++){
+    let s = 0; for (let d = -h; d <= h; d++) s += tt.gap[modv(g+d,NS)];
+    f[modv(tt.cuoiO + g, NS)] = (s/(2*h+1) + a/NS)/(tong + a) - 1/NS;
+  }
+  return chieu(f);
+}
+function mSplitHalf(tt){
+  const n = tt.n, n1 = tt.nNua, n2 = n - n1;
+  if (n < 200 || n1 < 80 || n2 < 80) return k12();
+  const s1 = Math.sqrt(n1*(1/NS)*(1-1/NS)), s2 = Math.sqrt(n2*(1/NS)*(1-1/NS));
+  const f = new Array(NS);
+  for (let i = 0; i < NS; i++){
+    const z1 = (tt.demNua[i] - n1/NS)/s1;
+    const z2 = ((tt.dem[i] - tt.demNua[i]) - n2/NS)/s2;
+    f[i] = Math.max(0, Math.min(z1, z2));
+  }
+  return chieu(f);
+}
+const HO = [
+  {ten:"Chi2Bias",      ma:"CHI", bo:"cu",  f:cChi2,      mo:"chi bình phương 37 ô"},
+  {ten:"SectorHeat",    ma:"SEC", bo:"cu",  f:cSector,    mo:"nhiệt cung cố định ±3 ô"},
+  {ten:"StreetFreq",    ma:"FRQ", bo:"cu",  f:cFreq,      mo:"tần suất street có shrink"},
+  {ten:"Recency",       ma:"REC", bo:"cu",  f:cRecency,   mo:"nhiệt gần đây, nửa đời 40"},
+  {ten:"NeighbourPairs",ma:"NBR", bo:"cu",  f:cPairs,     mo:"cặp ô kề nhau cùng nóng"},
+  {ten:"Markov",        ma:"MKV", bo:"cu",  f:cMarkov,    mo:"chuyển tiếp street bậc 1"},
+  {ten:"HarmonicTilt",  ma:"HRM", bo:"moi", f:mHarmonic,  mo:"sóng điều hoà, bánh xe nghiêng"},
+  {ten:"PocketShrink",  ma:"PKT", bo:"moi", f:mPocket,    mo:"Bayes thực nghiệm, ô lệch lẻ"},
+  {ten:"AdaptiveKernel",ma:"KRN", bo:"moi", f:mAdaptive,  mo:"nhân mượt tự chọn bề rộng"},
+  {ten:"DealerGap",     ma:"GAP", bo:"moi", f:mDealerGap, mo:"dấu tay người chia"},
+  {ten:"GapKernel",     ma:"GKR", bo:"moi", f:mGapKernel, mo:"dấu tay vùng rơi rộng"},
+  {ten:"SplitHalf",     ma:"SPL", bo:"moi", f:mSplitHalf, mo:"lọc bền vững hai nửa"}
+];
+/* 924 tổ hợp 6 trong 12, dựng sẵn một lần */
+const TO_HOP = [];
+(function gen(bd, cur){
+  if (cur.length === 6){ TO_HOP.push(cur.slice()); return; }
+  for (let i = bd; i < HO.length; i++){ cur.push(i); gen(i+1, cur); cur.pop(); }
+})(0, []);
+
+/* =====================================================================================
+   PHẦN 4 — BỐC STREET, SƠ LOẠI, KHOÁ ĐỘI HÌNH
+   ===================================================================================== */
+function boc(diemCua, tap){
+  const lay = new Set(), ra = [];
+  for (const j of tap){
+    const d = diemCua[j];
+    let t = -1, m = -Infinity;
+    for (let k = 0; k < 12; k++) if (!lay.has(k) && d[k] > m){ m = d[k]; t = k; }
+    if (t < 0) for (let k = 0; k < 12; k++) if (!lay.has(k)){ t = k; break; }
+    lay.add(t); ra.push({j, street:t});
   }
   return ra;
 }
-
-/* Các vùng hàng xóm: bốc tuần tự các cung rời nhau, mỗi cung coVung ô liền kề trên
-   bánh xe, chọn theo tổng tần suất cao nhất. Cung sau không được đè lên cung trước.
-   Số nằm giữa mỗi cung được tô sáng riêng.                                            */
-function cacVung(tt, coVung, soVung){
-  if (tt.n < 40) return null;
-  const daLay = new Set(), vung = [];
-  for (let v = 0; v < soVung; v++){
-    let tot = -1, best = -Infinity;
-    for (let c = 0; c < NS; c++){
-      let ok = true, s = 0;
-      for (let d = 0; d < coVung; d++){
-        const p = modv(c+d, NS);
-        if (daLay.has(p)){ ok = false; break; }
-        s += tt.dem[p];
-      }
-      if (ok && s > best){ best = s; tot = c; }
+function chotDoiHinh(luuDiem, luuKq, caNhan, nguongGoc){
+  /* Tiêu chí do người dùng chốt, chiếm 100% quyết định:
+     lọc các tổ hợp có chuỗi thua dài nhất <= ngưỡng VÀ EV dương,
+     rồi ưu tiên chuỗi thua ngắn nhất, hoà thì lấy EV cao nhất.                        */
+  const dg = [];
+  for (const tap of TO_HOP){
+    let tr = 0, cur = 0, mx = 0;
+    for (let q = 0; q < luuDiem.length; q++){
+      if (boc(luuDiem[q], tap).some(x => x.street === luuKq[q])){ tr++; cur = 0; }
+      else { cur++; if (cur > mx) mx = cur; }
     }
-    if (tot < 0) break;
-    const cac = [];
-    for (let d = 0; d < coVung; d++){ const p = modv(tot+d, NS); daLay.add(p); cac.push(WHEEL[p]); }
-    vung.push({tam: WHEEL[modv(tot + Math.floor(coVung/2), NS)], cac: cac, tan: best, viTri: tot});
+    const p = tr/luuDiem.length;
+    dg.push({tap, tr, p, ev:p*2 - 1, mx});
   }
-  const hop = new Set();
-  for (const v of vung) for (const x of v.cac) hop.add(x);
-  return {vung: vung, hop: hop, phu: hop.size,
-          kyVong: tt.n * hop.size / NS,
-          khoang: vung.length === 2 ? khoangCach(vung[0].viTri, vung[1].viTri) : null};
+  /* thang nới lỏng: nếu không tổ hợp nào đạt ngưỡng thì nâng dần và ghi lại đã dùng mức nào */
+  for (let ng = nguongGoc; ng <= 12; ng++){
+    const loc = dg.filter(x => x.mx <= ng && x.ev > 0);
+    if (loc.length){
+      loc.sort((a,b) => a.mx - b.mx || b.ev - a.ev);
+      const w = loc[0];
+      return {tap:w.tap, diem:w.tr, tong:luuDiem.length, mx:w.mx, p:w.p, ev:w.ev,
+              soThoa:loc.length, nguongDung:ng, evDuoc:true, tongTh:TO_HOP.length};
+    }
+  }
+  /* không tổ hợp nào có EV dương: bỏ điều kiện EV, giữ chuỗi thua ngắn nhất */
+  const s2 = dg.slice().sort((a,b) => a.mx - b.mx || b.ev - a.ev)[0];
+  return {tap:s2.tap, diem:s2.tr, tong:luuDiem.length, mx:s2.mx, p:s2.p, ev:s2.ev,
+          soThoa:0, nguongDung:s2.mx, evDuoc:false, tongTh:TO_HOP.length};
 }
-function khoangCach(a, b){ const d = Math.abs(a-b); return Math.min(d, NS-d); }
-
-/* Thống kê chi bình phương toàn bánh xe + giá trị p (xấp xỉ Wilson–Hilferty).          */
-function chi2Wheel(tt){
-  if (tt.n < 100) return null;
-  const exp = tt.n / NS;
-  let x = 0;
-  for (let i = 0; i < NS; i++){ const d = tt.dem[i] - exp; x += d*d/exp; }
-  const df = NS - 1;
-  const z = (Math.pow(x/df, 1/3) - (1 - 2/(9*df))) / Math.sqrt(2/(9*df));
-  return {x:x, df:df, p:1 - phi(z), z:z};
-}
-function phi(z){
-  const t = 1/(1 + 0.2316419*Math.abs(z));
-  const d = 0.3989423*Math.exp(-z*z/2);
-  const p = d*t*(0.3193815 + t*(-0.3565638 + t*(1.781478 + t*(-1.821256 + t*1.330274))));
-  return z > 0 ? 1 - p : p;
-}
-
-/* =====================================================================================
-   PHẦN 4 — THEO DÕI, CHẤM ĐIỂM, HIỆU QUẢ
-   ===================================================================================== */
 function theoDoi(spins, cfg){
-  const bd = cfg.BAT_DAU, n = spins.length;
   const tt = ttMoi();
-  const cham = {}; for (const t of TEN_E) cham[t] = [];
-  let vao = 0, trung = 0, dv = 0, trungCung = 0, hitZero = 0;
-  let chonHienTai = null, cungHienTai = null;
-  /* chuỗi thua liên tiếp — đếm từ vòng BAT_DAU+1, tức vòng đầu tiên được chấm */
-  let missHT = 0, missMax = 0, missKet = 0, hitHT = 0, hitMax = 0;
-  let cMissHT = 0, cMissMax = 0, cMissKet = 0, cHitHT = 0, cHitMax = 0;
+  const kd = cfg.KHOI_DONG, het = kd + cfg.SO_LOAI;
+  const luuDiem = [], luuKq = [];            // dữ liệu sơ loại
+  const caNhan = HO.map(() => ({d:0, n:0}));
+  let doiHinh = null;
+  const choi = {vao:0, trung:0, missHT:0, missMax:0, missKet:0, hitHT:0, hitMax:0,
+                cham:HO.map(() => []), chon:null};
+  let zero = 0;
 
-  for (let i = 0; i < n; i++){
-    if (tt.n >= bd){
-      const chon = chonSau(tt);
-      const cung = cacVung(tt, cfg.CO_VUNG, cfg.SO_VUNG);
-      const so = spins[i];
-      const k = (so in ST_OF) ? ST_OF[so] : -1;
-      vao++;
+  for (let i = 0; i < spins.length; i++){
+    const so = spins[i], k = (so in ST_OF) ? ST_OF[so] : -1;
+    const vongSo = tt.n + 1;
+
+    if (tt.n >= kd && tt.n < het){
+      /* --- giai đoạn sơ loại: ghi lại vector điểm của cả 12 engine --- */
+      const dv = HO.map(e => e.f(tt));
+      luuDiem.push(dv); luuKq.push(k);
+      dv.forEach((d, j) => {
+        let t = -1, m = -Infinity;
+        for (let q = 0; q < 12; q++) if (d[q] > m){ m = d[q]; t = q; }
+        caNhan[j].n++; if (t === k) caNhan[j].d++;
+      });
+    } else if (tt.n >= het){
+      /* --- chốt đội hình đúng một lần --- */
+      if (!doiHinh) doiHinh = chotDoiHinh(luuDiem, luuKq, caNhan, cfg.NGUONG_THUA);
+      /* --- giai đoạn chơi --- */
+      const dv = HO.map(e => e.f(tt));
+      const chon = boc(dv, doiHinh.tap);
+      choi.vao++;
+      if (so === 0) zero++;
       const ok = chon.some(c => c.street === k);
-      trung += ok ? 1 : 0;
-      dv += ok ? 6 : -6;
-      if (ok){ missHT = 0; hitHT++; if (hitHT > hitMax) hitMax = hitHT; }
-      else { hitHT = 0; missHT++; if (missHT > missMax){ missMax = missHT; missKet = tt.n + 1; } }
-      if (so === 0) hitZero++;
-      const okC = !!(cung && cung.hop.has(so));
-      if (okC) trungCung++;
-      if (okC){ cMissHT = 0; cHitHT++; if (cHitHT > cHitMax) cHitMax = cHitHT; }
-      else { cHitHT = 0; cMissHT++; if (cMissHT > cMissMax){ cMissMax = cMissHT; cMissKet = tt.n + 1; } }
-      for (const c of chon) cham[c.ten].push([tt.n, c.street === k]);
+      if (ok) choi.trung++;
+      if (ok){ choi.missHT = 0; choi.hitHT++; if (choi.hitHT > choi.hitMax) choi.hitMax = choi.hitHT; }
+      else { choi.hitHT = 0; choi.missHT++;
+             if (choi.missHT > choi.missMax){ choi.missMax = choi.missHT; choi.missKet = vongSo; } }
+      for (const c of chon) choi.cham[c.j].push([vongSo, c.street === k]);
+      choi.chon = chon;
     }
-    ttCapNhat(tt, spins[i]);
+    ttCapNhat(tt, so);
   }
-  if (tt.n >= bd){ chonHienTai = chonSau(tt); cungHienTai = cacVung(tt, cfg.CO_VUNG, cfg.SO_VUNG); }
-  return {tt, cham, vao, trung, dv, trungCung, hitZero, chon:chonHienTai, cung:cungHienTai,
-          missMax, missKet, missHT, hitMax,
-          cMissMax, cMissKet, cMissHT, cHitMax};
-}
-/* Kỳ vọng độ dài chuỗi liên tiếp dài nhất của một biến cố xác suất q trong n lần thử.
-   Đã kiểm chứng với mô phỏng 4.000 lượt, sai lệch dưới 0,07 ở mọi cỡ phủ.            */
-function kyVongChuoiDaiNhat(n, q){
-  if (n < 2 || q <= 0 || q >= 1) return 0;
-  const L = Math.log(1/q);
-  return Math.log(n*(1-q))/L + 0.5772156649/L - 0.5;
+  /* Chốt ngay khi dữ liệu sơ loại vừa đủ, không đợi thêm một vòng nữa.
+     Thiếu bước này thì đúng tại vòng KHOI_DONG+SO_LOAI sẽ có pha 3 mà chưa có đội hình. */
+  if (!doiHinh && luuDiem.length >= cfg.SO_LOAI)
+    doiHinh = chotDoiHinh(luuDiem, luuKq, caNhan, cfg.NGUONG_THUA);
+
+  /* dự báo cho vòng kế tiếp */
+  if (doiHinh) choi.chon = boc(HO.map(e => e.f(tt)), doiHinh.tap);
+  /* giai đoạn suy ra từ việc ĐÃ CHỐT hay chưa, không suy từ số vòng */
+  return {tt, caNhan, doiHinh, choi, zero,
+          pha: tt.n < kd ? 0 : (doiHinh ? 2 : 1),
+          daSoLoai: Math.max(0, Math.min(cfg.SO_LOAI, tt.n - kd))};
 }
 function machCua(ds){
   let m = 0;
   for (let i = ds.length - 1; i >= 0; i--){ if (!ds[i][1]) break; m++; }
   return m;
 }
-
-/* =====================================================================================
-   PHẦN 5 — MÔ PHỎNG BÁNH XE CÂN ĐỂ ĐO NGƯỠNG NHIỄU
-   ===================================================================================== */
-function mkRng(seed){
-  let s = seed >>> 0;
-  return function(){ s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0;
-                     return s / 4294967296; };
+function kyVongChuoiDaiNhat(n, q){
+  if (n < 2 || q <= 0 || q >= 1) return 0;
+  const L = Math.log(1/q);
+  return Math.log(n*(1-q))/L + 0.5772156649/L - 0.5;
 }
-function nguongNhieu(cfg, soPhien, vongMoiPhien){
-  const rnd = mkRng(20260904);
-  let vao = 0, trung = 0, trungCung = 0;
-  const eng = {}; for (const t of TEN_E) eng[t] = {d:0, n:0};
-  for (let p = 0; p < soPhien; p++){
-    const spins = [];
-    for (let i = 0; i < vongMoiPhien; i++) spins.push(WHEEL[Math.floor(rnd()*NS)]);
-    const r = theoDoi(spins, cfg);
-    vao += r.vao; trung += r.trung; trungCung += r.trungCung;
-    for (const t of TEN_E){
-      for (const c of r.cham[t]){ eng[t].n++; if (c[1]) eng[t].d++; }
-    }
-  }
-  if (!vao) return null;
-  const tl = trung / vao;
-  return {vao, tyLe:tl, se:Math.sqrt(tl*(1-tl)/vao), cung:trungCung/vao, eng};
+function chi2Wheel(tt){
+  if (tt.n < 100) return null;
+  const e = tt.n/NS; let x = 0;
+  for (let i = 0; i < NS; i++){ const d = tt.dem[i] - e; x += d*d/e; }
+  const df = NS - 1;
+  const z = (Math.pow(x/df, 1/3) - (1 - 2/(9*df)))/Math.sqrt(2/(9*df));
+  return {x, df, p:1 - phi(z)};
+}
+function phi(z){
+  const t = 1/(1 + 0.2316419*Math.abs(z)), d = 0.3989423*Math.exp(-z*z/2);
+  const p = d*t*(0.3193815 + t*(-0.3565638 + t*(1.781478 + t*(-1.821256 + t*1.330274))));
+  return z > 0 ? 1 - p : p;
 }
 
 /* =====================================================================================
-   PHẦN 6 — GIAO DIỆN
+   PHẦN 5 — GIAO DIỆN
    ===================================================================================== */
-let SPINS = [], CHE_DO = "nb", HIEN_ENGINE = false;
+let SPINS = [], HIEN_HO = false, HIEN_DOI = false;
 const $ = id => document.getElementById(id);
-let CHE_MA = {};
-
 function cauHinh(){
-  return {BAT_DAU: Math.max(20, parseInt($("oBatDau").value) || 60),
-          CUOC: Math.max(0, parseInt($("oCuoc").value) || 0),
-          SO_VUNG: Math.min(4, Math.max(1, parseInt($("oSoVung").value) || 2)),
-          CO_VUNG: Math.min(18, Math.max(3, parseInt($("oCoVung").value) || 9))};
+  return {KHOI_DONG: Math.max(20, parseInt($("oKhoiDong").value) || 40),
+          SO_LOAI:   Math.max(20, parseInt($("oSoLoai").value) || 60),
+          CUOC:      Math.max(0,  parseInt($("oCuoc").value) || 0),
+          NGUONG_THUA: Math.max(1, Math.min(9, parseInt($("oNguong").value) || 3)),
+          TRAN:      Math.max(0,  parseInt($("oTran").value) || 0)};
 }
-function luu(){
-  try{ localStorage.setItem("rou_spins", SPINS.join(","));
-       localStorage.setItem("rou_mode", CHE_DO); }catch(e){}
-}
+function luu(){ try{ localStorage.setItem("r12_spins", SPINS.join(",")); }catch(e){} }
 function doc(){
-  try{ CHE_DO = localStorage.getItem("rou_mode") || "nb";
-       return (localStorage.getItem("rou_spins")||"").split(",").map(x => parseInt(x))
-              .filter(x => Number.isInteger(x) && x >= 0 && x <= 36); }catch(e){ return []; }
+  try{ return (localStorage.getItem("r12_spins")||"").split(",").map(x => parseInt(x))
+        .filter(x => Number.isInteger(x) && x >= 0 && x <= 36); }catch(e){ return []; }
 }
 function them(n){ SPINS.push(n); luu(); ve(); }
 function xoa1(){ SPINS.pop(); luu(); ve(); }
-function phienMoi(){
-  if (SPINS.length && !confirm("Xoá toàn bộ " + SPINS.length + " vòng để bắt đầu phiên mới?")) return;
+function banMoi(){
+  if (SPINS.length && !confirm("Reset bàn chơi mới? Toàn bộ " + SPINS.length +
+      " vòng sẽ bị xoá và đội hình sẽ được sơ loại lại từ đầu.")) return;
   SPINS = []; luu(); ve();
 }
 function dungChuoi(){
@@ -517,240 +499,235 @@ function dungChuoi(){
   luu(); ve();
 }
 function hienSua(){
-  const k = $("khoiSua");
-  const mo = k.style.display === "none";
+  const k = $("khoiSua"), mo = k.style.display === "none";
   k.style.display = mo ? "block" : "none";
   $("nutSua").textContent = mo ? "Đóng ô sửa" : "Sửa cả chuỗi";
   if (mo) $("oChuoi").value = SPINS.join(" ");
 }
-function doiCheDo(m){ CHE_DO = m; luu(); ve(); }
-function bacEngine(){ HIEN_ENGINE = !HIEN_ENGINE; ve(); }
+function bacHo(){ HIEN_HO = !HIEN_HO; ve(); }
+function bacDoi(){ HIEN_DOI = !HIEN_DOI; ve(); }
 
-/* ---------------- vẽ bàn cược ---------------- */
-function veBan(che, vung){
-  const chonSet = new Set(che || []);
-  const nhom = new Map(), tamCua = new Map();
-  if (vung) vung.vung.forEach((v,i) => {
-    v.cac.forEach(x => nhom.set(x, i)); tamCua.set(v.tam, i);
-  });
-  const mau = i => i === 0 ? "" : (i === 1 ? "2" : (i === 2 ? "3" : "4"));
-  let nhanCot = '<div class="nhan-cot"><span class="sp"></span>';
+function veBan(che, maCua){
+  const ch = new Set(che || []);
+  let h = '<div class="nhan-cot"><span class="sp"></span>';
   for (let k = 0; k < 12; k++)
-    nhanCot += '<span class="n' + (chonSet.has(k) ? " on" : "") + '">' +
-               (chonSet.has(k) ? (CHE_MA[k] || "\u2022") : "S" + (k+1)) + "</span>";
-  nhanCot += "</div>";
-  let h = '<div class="ban"><div class="o-zero"' +
-    (nhom.has(0) ? ' style="box-shadow:inset 0 0 0 2px var(--cung' + mau(nhom.get(0)) + ')"' : "") +
-    ">0</div><div class=\"cot-wrap\">";
+    h += '<span class="n' + (ch.has(k) ? " on" : "") + '">' +
+         (ch.has(k) ? (maCua[k] || "\u2022") : "S" + (k+1)) + "</span>";
+  h += '</div><div class="ban"><div class="o-zero">0</div><div class="cot-wrap">';
   for (let k = 0; k < 12; k++){
     h += '<div class="cot">';
-    for (const so of [3*k+3, 3*k+2, 3*k+1]){
-      let cls = "so " + (DO.has(so) ? "do" : "den");
-      if (chonSet.has(k)) cls = "so sang";
-      if (tamCua.has(so)) cls = "so tam" + mau(tamCua.get(so));
-      else if (nhom.has(so)) cls += " cung" + mau(nhom.get(so));
-      h += '<div class="' + cls + '">' + so + "</div>";
-    }
+    for (const so of [3*k+3, 3*k+2, 3*k+1])
+      h += '<div class="so ' + (ch.has(k) ? "sang" : (DO.has(so) ? "do" : "den")) + '">' + so + "</div>";
     h += "</div>";
   }
-  return '<div class="ban-wrap">' + nhanCot + h + "</div></div></div>";
+  return '<div class="ban-wrap">' + h + "</div></div></div>";
 }
-/* Bánh xe tròn 37 ô đúng thứ tự vật lý. Vùng hàng xóm hiện thành cung liền mạch,
-   kể cả khi vắt qua ô 0 — điều mà dải ngang không thể hiện đúng được.               */
-function veWheelTron(vung){
-  const CX = 180, CY = 180, R_NGOAI = 172, R_BAND = 158, R_O = 152, R_TRONG = 104, R_CHU = 128;
-  const B = 360 / NS;
-  const nhom = new Map(), tamCua = new Map();
-  if (vung) vung.vung.forEach((v,i) => { v.cac.forEach(x => nhom.set(x, i)); tamCua.set(v.tam, i); });
-  const mauVung = i => ["var(--cung)","var(--cung2)","var(--cung3)","var(--cung4)"][i] || "var(--cung)";
-  const chuTam  = i => ["#3D2A00","#25103F","#062B38","#3D0A16"][i] || "#3D2A00";
-
-  const diem = (r, a) => {
-    const t = (a - 90) * Math.PI / 180;
-    return [(CX + r*Math.cos(t)).toFixed(2), (CY + r*Math.sin(t)).toFixed(2)];
-  };
-  const cung = (r1, r2, a1, a2) => {
-    const [x1,y1] = diem(r2,a1), [x2,y2] = diem(r2,a2);
-    const [x3,y3] = diem(r1,a2), [x4,y4] = diem(r1,a1);
-    return "M" + x1 + " " + y1 + "A" + r2 + " " + r2 + " 0 0 1 " + x2 + " " + y2 +
-           "L" + x3 + " " + y3 + "A" + r1 + " " + r1 + " 0 0 0 " + x4 + " " + y4 + "Z";
-  };
-
-  let h = '<svg class="tron" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">';
-  h += '<circle cx="180" cy="180" r="174" fill="none" stroke="var(--line)" stroke-width="1"/>';
-  WHEEL.forEach((m, i) => {
-    const a1 = i*B, a2 = (i+1)*B, giua = a1 + B/2;
-    const laTam = tamCua.has(m), v = nhom.get(m);
-    const nen = laTam ? mauVung(tamCua.get(m))
-                      : (m === 0 ? "var(--zero)" : (DO.has(m) ? "var(--do)" : "var(--den)"));
-    h += '<path d="' + cung(R_TRONG, R_O, a1, a2) + '" fill="' + nen +
-         '" stroke="var(--ni)" stroke-width="1"/>';
-    if (v !== undefined)
-      h += '<path d="' + cung(R_BAND, R_NGOAI, a1+0.4, a2-0.4) + '" fill="' + mauVung(v) + '"/>';
-    let xoay = giua;
-    if (giua > 90 && giua < 270) xoay = giua + 180;
-    const [tx, ty] = diem(R_CHU, giua);
-    h += '<text x="' + tx + '" y="' + ty + '" text-anchor="middle" dominant-baseline="central" ' +
-         'font-size="' + (laTam ? 13 : 11) + '" font-weight="' + (laTam ? 800 : 600) + '" fill="' +
-         (laTam ? chuTam(tamCua.get(m)) : "#fff") + '" transform="rotate(' + xoay.toFixed(1) +
-         ' ' + tx + ' ' + ty + ')">' + m + "</text>";
-  });
-  const phu = vung ? vung.phu : 0;
-  h += '<circle cx="180" cy="180" r="' + (R_TRONG-4) + '" fill="var(--panel)" stroke="var(--line)"/>';
-  h += '<text x="180" y="168" text-anchor="middle" font-size="13" fill="var(--nga-mo)">phủ</text>';
-  h += '<text x="180" y="196" text-anchor="middle" font-size="30" font-weight="700" fill="var(--nga)">' +
-       phu + "</text>";
-  h += '<text x="180" y="216" text-anchor="middle" font-size="12" fill="var(--nga-mo)">/ 37 ô</text>';
-  return h + "</svg>";
-}
-
 function veChuoi(){
   if (!SPINS.length) return '<div class="small muted" style="margin-top:10px">Chưa có vòng nào.</div>';
   const hien = SPINS.slice(-36);
-  let h = '<div class="chuoi">';
+  let h = '<div class="small muted" style="margin-top:12px">' + hien.length + " vòng gần nhất, cũ → mới" +
+    (SPINS.length > 36 ? " (tổng " + SPINS.length + ")" : "") + '</div><div class="chuoi">';
   hien.forEach((x,i) => {
-    const c = x === 0 ? "zero" : (DO.has(x) ? "do" : "den");
-    h += '<span class="vien-so ' + c + (i === hien.length-1 ? " cuoi" : "") + '">' + x + "</span>";
+    h += '<span class="vien-so ' + (x === 0 ? "zero" : (DO.has(x) ? "do" : "den")) +
+         (i === hien.length-1 ? " cuoi" : "") + '">' + x + "</span>";
   });
-  h += "</div>";
-  return '<div class="nhan-nho" style="margin-top:12px">' + hien.length + " vòng gần nhất, cũ → mới" +
-         (SPINS.length > 36 ? " (tổng " + SPINS.length + ")" : "") + "</div>" + h;
+  return h + "</div>";
 }
 function dayCham(ds){
   if (!ds.length) return '<span class="tiny muted">chưa chấm</span>';
   return ds.slice(-12).map(x => '<span class="cham ' + (x[1] ? "d" : "s") + '"></span>').join("");
 }
 const stTen = k => "S" + (k+1) + " (" + STREETS[k].join("\u00b7") + ")";
+const nhanBo = e => '<span class="nhan-bo ' + e.bo + '">' + (e.bo === "cu" ? "cũ" : "mới") + "</span>";
 
-/* ---------------- một khối thống kê duy nhất ---------------- */
-function khoiThongKe(tieuDe, phu, trung, vao, missMax, missKet, missHT, hitMax, cuoc, bat){
-  const p = vao ? trung/vao : 0, se = vao ? Math.sqrt(p*(1-p)/vao) : 0;
-  const kvTrung = phu/37, hoaVon = phu/36;
-  const ev = p*(35-(phu-1))/phu + (1-p)*(-1);
-  const q = 1 - phu/37;
-  const kvChuoi = kyVongChuoiDaiNhat(vao, q);
-  const cao = missMax > kvChuoi + 3;
-  const o = (nhan, gt, phuChu, mau) =>
-    '<div><div class="nhan">' + nhan + '</div><div class="gt"' +
-    (mau ? ' style="color:' + mau + '"' : "") + ">" + gt +
-    (phuChu ? '<span class="small muted"> ' + phuChu + "</span>" : "") + "</div></div>";
-
-  return "<section><h2>" + tieuDe + ", tính từ vòng " + bat + "</h2>" +
-    '<div class="hop"><div class="so-lieu">' +
-    o("Vòng đã chấm", vao, "") +
-    o("Tỷ lệ trúng", (p*100).toFixed(1) + "%", "\u00b1" + (se*100).toFixed(1)) +
-    o("EV thực tế", (ev >= 0 ? "+" : "") + (ev*100).toFixed(2) + "%", "",
-      ev > 0 ? "var(--chon)" : "var(--nga)") +
-    o("Miss dài nhất", missMax, "vòng" + (missKet ? ", kết ở vòng " + missKet : ""),
-      cao ? "var(--cung)" : "") +
-    o("Đang miss", missHT, "vòng", missHT >= Math.round(kvChuoi) ? "var(--cung)" : "") +
-    o("Thắng liên tiếp dài nhất", hitMax, "vòng") +
-    "</div>" +
-    '<div class="dien-giai">Phủ ' + phu + " số nên kỳ vọng trúng trên bánh xe cân là <b>" +
-    (kvTrung*100).toFixed(1) + "%</b>, ngưỡng hoà vốn là <b>" + (hoaVon*100).toFixed(1) +
-    "%</b>. Chuỗi miss dài nhất mà bánh xe cân tự tạo ra với " + vao + " vòng là <b>~" +
-    kvChuoi.toFixed(1) + "</b>, " +
-    (cao ? "con số của bạn đang vượt khá xa mức đó, nhưng chuỗi dài nhất là đại lượng đuôi nên dao động rất mạnh."
-         : "con số của bạn đang nằm quanh mức đó.") +
-    " Đặt " + cuoc.toLocaleString("vi-VN") + "đ mỗi số tức " +
-    (cuoc*phu).toLocaleString("vi-VN") + "đ mỗi vòng; chuỗi miss dài nhất đã ngốn " +
-    (missMax*phu*cuoc).toLocaleString("vi-VN") + "đ liên tiếp. Trúng lãi đúng 100% tiền đặt, " +
-    "trượt mất trọn.</div></div></section>";
-}
-
-/* ---------------- vẽ toàn trang ---------------- */
 function ve(){
   const cfg = cauHinh(), n = SPINS.length;
   $("soVong").textContent = n;
-  $("btnNb").className = "che" + (CHE_DO === "nb" ? " on" : "");
-  $("btnSt").className = "che" + (CHE_DO === "st" ? " on" : "");
-  $("khoiNb").style.display = CHE_DO === "nb" ? "block" : "none";
-  $("khoiSt").style.display = CHE_DO === "st" ? "block" : "none";
   veLaiNhap();
   $("chuoiKq").innerHTML = veChuoi();
-  CHE_MA = {};
-
-  if (n < cfg.BAT_DAU){
-    const tb = '<div class="trong">Cần đủ ' + cfg.BAT_DAU + ' vòng để bắt đầu. Hiện có ' + n +
-      ", nhập thêm " + (cfg.BAT_DAU - n) + " vòng nữa.</div>";
-    $("khoiNb").innerHTML = tb; $("khoiSt").innerHTML = tb; $("khoiChi2").innerHTML = "";
-    return;
-  }
-
   const r = theoDoi(SPINS, cfg);
-  const cheStreets = r.chon.map(c => c.street);
-  r.chon.forEach(c => CHE_MA[c.street] = c.ma);
-  const vung = r.cung, phuC = vung ? vung.phu : 0;
-  const bat = cfg.BAT_DAU + 1;
 
-  /* ===== PHƯƠNG ÁN 1 — NEIGHBOUR: chỉ bánh xe ===== */
-  let a = "";
-  if (vung && vung.vung.length){
-    a += khoiThongKe("Hiệu quả của vùng hàng xóm", phuC, r.trungCung, r.vao,
-                     r.cMissMax, r.cMissKet, r.cMissHT, r.cHitMax, cfg.CUOC, bat);
-    const mauI = i => ["var(--cung)","var(--cung2)","var(--cung3)","var(--cung4)"][i] || "var(--cung)";
-    const ds = vung.vung.map((v,i) => "vùng " + (i+1) + " tâm <b style='color:" + mauI(i) +
-      "'>" + v.tam + "</b>").join(" \u00b7 ");
-    let ghi = "";
-    if (vung.khoang !== null)
-      ghi = vung.khoang <= cfg.CO_VUNG
-        ? " Hai tâm chỉ cách " + vung.khoang + " ô, nhiệt đang dồn về một chỗ."
-        : " Hai tâm cách " + vung.khoang + " ô, hai vùng tách rời thật sự.";
-    a += "<section><h2>" + vung.vung.length + " vùng \u00d7 " + cfg.CO_VUNG + " ô cho vòng " +
-      (n+1) + "</h2>" + veWheelTron(vung) +
-      '<div class="dien-giai">' + ds + "." + ghi +
-      " Ô tô đậm là tâm mỗi vùng, vành ngoài đánh dấu toàn bộ ô thuộc vùng.</div></section>";
-  } else a = '<div class="trong">Chưa đủ dữ liệu để dựng vùng.</div>';
-  $("khoiNb").innerHTML = a;
-
-  /* ===== PHƯƠNG ÁN 2 — 6 STREET: chỉ bàn cược ===== */
-  let b = khoiThongKe("Hiệu quả của 6 street", 18, r.trung, r.vao,
-                      r.missMax, r.missKet, r.missHT, r.hitMax, cfg.CUOC/3, bat);
-  b += "<section><h2>Sáu street được chọn cho vòng " + (n+1) + "</h2>" +
-    veBan(cheStreets, null) +
-    '<div class="chu-thich"><span><i style="background:var(--chon)"></i>' +
-    'street được chọn, 18 số trên 37</span>' +
-    '<span>mã engine sở hữu hiện ở đầu mỗi cột</span></div></section>';
-  b += '<section><button class="nut-gap" onclick="bacEngine()">' +
-       (HIEN_ENGINE ? "\u25bc Ẩn bảng 6 engine" : "\u25b6 Hiện bảng 6 engine") + "</button>";
-  if (HIEN_ENGINE){
-    b += "<table style=\"margin-top:8px\"><tr><th>Engine</th><th>Street</th><th>Mạch</th>" +
-      "<th>Trúng</th><th style=\"text-align:right\">12 lần gần nhất</th></tr>";
-    for (const c of r.chon){
-      const e = ENGINES.find(x => x.ten === c.ten), ds2 = r.cham[c.ten];
-      const dung = ds2.filter(x => x[1]).length;
-      b += "<tr><td><div class='ten-e'>" + c.ten + "</div><div class='ghi'>" + e.mo + "</div></td>" +
-        "<td><span class='vien'>" + stTen(c.street) + "</span></td>" +
-        "<td style='text-align:center'><span class='mach" + (machCua(ds2) ? "" : " im") + "'>" +
-        machCua(ds2) + "</span></td>" +
-        "<td style='text-align:center' class='small muted'>" + dung + "/" + ds2.length +
-        (ds2.length ? " \u00b7 " + (dung/ds2.length*100).toFixed(1) + "%" : "") + "</td>" +
-        "<td style='text-align:right;white-space:nowrap'>" + dayCham(ds2) + "</td></tr>";
-    }
-    b += '</table><div class="dien-giai">Mỗi engine sở hữu một street, kỳ vọng trúng của ' +
-         "một street là 3/37 = <b>8,11%</b>.</div>";
+  /* ---------- thanh giai đoạn ---------- */
+  let ph = "";
+  if (r.pha === 0){
+    const con = cfg.KHOI_DONG - n;
+    ph = '<div class="pha"><div class="ten">Giai đoạn 1 / 3</div>' +
+      '<div class="lon">Khởi động \u2014 còn ' + con + ' vòng</div>' +
+      '<div class="thanh"><div style="width:' + (n/cfg.KHOI_DONG*100).toFixed(1) + '%"></div></div>' +
+      '<div class="dien-giai">Các engine cần một lượng mẫu tối thiểu trước khi nói được gì. ' +
+      "Chưa chấm điểm trong giai đoạn này.</div></div>";
+  } else if (r.pha === 1){
+    const con = cfg.SO_LOAI - r.daSoLoai;
+    ph = '<div class="pha"><div class="ten">Giai đoạn 2 / 3</div>' +
+      '<div class="lon">Sơ loại \u2014 ' + r.daSoLoai + "/" + cfg.SO_LOAI +
+      " vòng, còn " + con + "</div>" +
+      '<div class="thanh"><div style="width:' + (r.daSoLoai/cfg.SO_LOAI*100).toFixed(1) + '%"></div></div>' +
+      '<div class="dien-giai">Cả 12 engine đang chạy song song. Hết ' + cfg.SO_LOAI +
+      " vòng, code duyệt 924 tổ hợp và khoá đội hình 6 engine. Chưa đặt cược trong giai đoạn này.</div></div>";
+  } else {
+    const d = r.doiHinh;
+    const dat = d.evDuoc && d.nguongDung <= cfg.NGUONG_THUA;
+    ph = '<div class="pha"><div class="ten">Giai đoạn 3 / 3</div>' +
+      '<div class="lon">Đã khoá đội hình</div>' +
+      '<div class="thanh xong"><div style="width:100%"></div></div>' +
+      '<div class="so-lieu" style="margin-top:12px;background:none;border:0;padding:0">' +
+      '<div><div class="nhan">Chuỗi thua khi sơ loại</div><div class="gt">' + d.mx +
+      '<span class="small muted"> vòng</span></div></div>' +
+      '<div><div class="nhan">EV khi sơ loại</div><div class="gt" style="color:' +
+      (d.ev > 0 ? "var(--chon)" : "var(--nga)") + '">' + (d.ev >= 0 ? "+" : "") +
+      (d.ev*100).toFixed(1) + '%</div></div>' +
+      '<div><div class="nhan">Tổ hợp thoả điều kiện</div><div class="gt">' + d.soThoa +
+      '<span class="small muted"> / ' + d.tongTh + "</span></div></div>" +
+      '<div><div class="nhan">Ngưỡng đã dùng</div><div class="gt"' +
+      (dat ? "" : ' style="color:var(--vang)"') + ">\u2264 " + d.nguongDung +
+      '<span class="small muted"> vòng</span></div></div></div>' +
+      '<div class="dien-giai">' +
+      (dat
+        ? "Chọn theo đúng tiêu chí bạn đặt: chuỗi thua ngắn nhất trước, hoà thì lấy EV cao nhất. "
+        : (d.evDuoc
+            ? "<b>Không tổ hợp nào đạt ngưỡng \u2264 " + cfg.NGUONG_THUA +
+              " vòng, đã phải nới lên \u2264 " + d.nguongDung + ".</b> "
+            : "<b>Không tổ hợp nào có EV dương. Đã bỏ điều kiện EV, chỉ giữ chuỗi thua ngắn nhất.</b> ")) +
+      "Có <b>" + d.soThoa + "</b> trong " + d.tongTh + " tổ hợp cùng thoả điều kiện, nên con số " +
+      "này không hiếm như vẻ ngoài. Chuỗi thua ngắn khi sơ loại chủ yếu do may, " +
+      "và kỳ vọng chuỗi thua thật với 18 số phủ là <b>~" +
+      kyVongChuoiDaiNhat(200, 1 - 18/37).toFixed(1) + " vòng</b> trên mỗi 200 vòng chơi. " +
+      "Đội hình giữ nguyên cho tới khi bạn reset; chúng vẫn học tiếp, chỉ danh sách bị khoá.</div></div>";
   }
-  b += "</section>";
-  $("khoiSt").innerHTML = b;
+  $("khoiPha").innerHTML = ph;
 
-  /* ===== chi bình phương, dùng chung cho cả hai ===== */
+  /* ---------- khối chơi ---------- */
+  if (r.pha < 2){
+    $("khoiChoi").innerHTML = "";
+  } else {
+    const c = r.choi;
+    const p = c.vao ? c.trung/c.vao : 0;
+    const se = c.vao ? Math.sqrt(p*(1-p)/c.vao) : 0;
+    const ev = p*2 - 1;
+    const kv = kyVongChuoiDaiNhat(c.vao, 1 - 18/37);
+    const maCua = {}; c.chon.forEach(x => maCua[x.street] = HO[x.j].ma);
+    const o = (n2,g,ph2,mau) => '<div><div class="nhan">' + n2 + '</div><div class="gt"' +
+      (mau ? ' style="color:' + mau + '"' : "") + ">" + g +
+      (ph2 ? '<span class="small muted"> ' + ph2 + "</span>" : "") + "</div></div>";
+
+    const DU = c.vao >= 10;          // dưới 10 vòng thì mọi tỷ lệ đều vô nghĩa
+    let h = "<section><h2>Đội hình đã khoá \u2014 sáu street cho vòng " + (n+1) + "</h2>" +
+      '<div class="hop"><div class="so-lieu">' +
+      o("Vòng đã chấm", c.vao, "kể từ khi khoá") +
+      o("Tỷ lệ trúng", DU ? (p*100).toFixed(1) + "%" : "\u2014",
+        DU ? "\u00b1" + (se*100).toFixed(1) : "cần \u2265 10 vòng") +
+      o("EV thực tế", DU ? (ev >= 0 ? "+" : "") + (ev*100).toFixed(2) + "%" : "\u2014", "",
+        DU && ev > 0 ? "var(--chon)" : "var(--nga)") +
+      o("Miss dài nhất", c.missMax, "vòng, khi sơ loại là " + r.doiHinh.mx,
+        c.missMax > r.doiHinh.mx ? "var(--vang)" : "") +
+      o("Đang miss", c.missHT, "vòng", c.missHT >= Math.round(kv) ? "var(--vang)" : "") +
+      o("Thắng liên tiếp dài nhất", c.hitMax, "vòng") +
+      "</div>" +
+      '<div class="dien-giai">Kỳ vọng trúng trên bánh xe cân là <b>48,6%</b>, ngưỡng hoà vốn ' +
+      "<b>50,0%</b>. Cược " + cfg.CUOC.toLocaleString("vi-VN") + "đ mỗi street tức " +
+      (cfg.CUOC*6).toLocaleString("vi-VN") + "đ mỗi vòng. " +
+      (c.vao === 0
+        ? "Đội hình vừa chốt xong, chưa vòng nào được chấm. Sáu street dưới đây là đề xuất cho vòng kế tiếp."
+        : (DU
+            ? "Chuỗi miss dài nhất mà bánh xe cân tự tạo ra với " + c.vao + " vòng là <b>~" +
+              kv.toFixed(1) + "</b>. Tạm tính " +
+              ((c.trung*6 - (c.vao - c.trung)*6)*cfg.CUOC).toLocaleString("vi-VN") + "đ."
+            : "Mới " + c.vao + " vòng được chấm, chưa đủ để tỷ lệ trúng hay EV có ý nghĩa. " +
+              "Với 18 số phủ, cần vài trăm vòng thì các con số này mới nói được điều gì.")) +
+      "</div>" +
+      veBan(c.chon.map(x => x.street), maCua) + "</div></section>";
+
+    /* ----- khối gấp thếp: phơi nhiễm theo thời gian thực ----- */
+    const goc = cfg.CUOC*6;
+    const buoc = c.missHT;
+    const keTiep = goc*Math.pow(2, buoc);
+    const luyKe = goc*(Math.pow(2, buoc) - 1);
+    const kMax = cfg.TRAN > 0 ? Math.floor(Math.log2(Math.max(cfg.TRAN/Math.max(cfg.CUOC,1),1))) : 99;
+    const conLai = kMax - buoc;
+    const kvChuoi200 = kyVongChuoiDaiNhat(200, 1 - 18/37);
+    const nguyHiem = conLai <= 2;
+    h += '<section><h2>Gấp thếp \u2014 phơi nhiễm hiện tại</h2><div class="hop">' +
+      '<div class="so-lieu">' +
+      o("Đang thua liên tiếp", buoc, "vòng", buoc >= 3 ? "var(--vang)" : "") +
+      o("Vòng kế phải đặt", keTiep.toLocaleString("vi-VN") + "đ",
+        (keTiep/6).toLocaleString("vi-VN") + "đ mỗi street") +
+      o("Lỗ luỹ kế chuỗi này", luyKe.toLocaleString("vi-VN") + "đ", "") +
+      o("Còn gấp được", cfg.TRAN > 0 ? conLai + " lần" : "\u2014",
+        cfg.TRAN > 0 ? "trước khi chạm trần" : "chưa đặt trần",
+        nguyHiem && cfg.TRAN > 0 ? "var(--do)" : "") +
+      "</div>" +
+      '<div class="dien-giai">Với trần ' + cfg.TRAN.toLocaleString("vi-VN") +
+      "đ mỗi street, bạn gấp được tối đa <b>" + kMax + " lần</b>, tức chịu được chuỗi thua " +
+      kMax + " vòng. Kỳ vọng chuỗi thua dài nhất với 18 số phủ là <b>~" +
+      kvChuoi200.toFixed(1) + " vòng mỗi 200 vòng chơi</b>" +
+      (kMax < kvChuoi200
+        ? ", <b style=\'color:var(--do)\'>cao hơn số lần bạn gấp được</b>. Nghĩa là chuỗi vượt trần là chuyện sẽ xảy ra, không phải rủi ro hiếm."
+        : ".") +
+      " Gấp thếp không đổi EV: tổng lỗ kỳ vọng vẫn là 2,70% trên tổng tiền đã đặt, " +
+      "nó chỉ đổi hình dạng thành nhiều lần thắng nhỏ và một lần thua rất lớn.</div></div></section>";
+
+    /* ----- bảng 6 engine, thu gọn được ----- */
+    h += '<section><button class="nut-gap" onclick="bacDoi()">' +
+      (HIEN_DOI ? "\u25bc Ẩn chi tiết 6 engine trong đội" : "\u25b6 Hiện chi tiết 6 engine trong đội") +
+      "</button>";
+    if (HIEN_DOI){
+      h += "<table style='margin-top:8px'><tr><th>Engine trong đội</th><th>Street</th>" +
+        "<th>Mạch</th><th>Trúng</th><th style='text-align:right'>12 lần gần nhất</th></tr>";
+      for (const x of c.chon){
+        const e = HO[x.j], ds = c.cham[x.j], d2 = ds.filter(y => y[1]).length;
+        h += "<tr><td><div class='ten-e'>" + e.ten + nhanBo(e) + "</div>" +
+          "<div class='ghi'>" + e.mo + "</div></td>" +
+          "<td><span class='vien'>" + stTen(x.street) + "</span></td>" +
+          "<td style='text-align:center'><span class='mach" + (machCua(ds) ? "" : " im") + "'>" +
+          machCua(ds) + "</span></td>" +
+          "<td style='text-align:center' class='small muted'>" + d2 + "/" + ds.length +
+          (ds.length ? " \u00b7 " + (d2/ds.length*100).toFixed(1) + "%" : "") + "</td>" +
+          "<td style='text-align:right;white-space:nowrap'>" + dayCham(ds) + "</td></tr>";
+      }
+      h += "</table>";
+    }
+    h += "</section>";
+    $("khoiChoi").innerHTML = h;
+  }
+
+  /* ---------- hồ 12 engine ---------- */
+  let ho = '<section><button class="nut-gap" onclick="bacHo()">' +
+    (HIEN_HO ? "\u25bc Ẩn bảng hồ 12 engine" : "\u25b6 Hiện bảng hồ 12 engine") + "</button>";
+  if (HIEN_HO){
+    const trongDoi = new Set(r.doiHinh ? r.doiHinh.tap : []);
+    ho += "<table style='margin-top:8px'><tr><th>Engine</th><th>Nguồn</th>" +
+      "<th style='text-align:right'>Trúng khi sơ loại</th><th style='text-align:center'>Trong đội</th></tr>";
+    HO.forEach((e,j) => {
+      const cn = r.caNhan[j];
+      ho += "<tr class='" + (trongDoi.has(j) ? "trong-doi" : "") + "'>" +
+        "<td><div class='ten-e'>" + e.ten + "</div><div class='ghi'>" + e.mo + "</div></td>" +
+        "<td class='small muted'>" + (e.bo === "cu" ? "bộ cũ" : "bộ mới") + "</td>" +
+        "<td style='text-align:right' class='small muted'>" +
+        (cn.n ? cn.d + "/" + cn.n + " \u00b7 " + (cn.d/cn.n*100).toFixed(1) + "%" : "\u2014") + "</td>" +
+        "<td style='text-align:center'>" + (trongDoi.has(j) ? "\u2713" : "") + "</td></tr>";
+    });
+    ho += "</table><div class='dien-giai'>Cột trúng khi sơ loại là thành tích riêng lẻ của từng " +
+      "engine, kỳ vọng 8,11%. Đội hình <b>không</b> chọn theo cột này mà chọn theo kết quả của " +
+      "cả đội trên toàn bộ 924 tổ hợp, vì engine mạnh riêng lẻ chưa chắc ghép thành đội tốt.</div>";
+  }
+  $("khoiHo").innerHTML = ho + "</section>";
+
+  /* ---------- chi bình phương ---------- */
   const c2 = chi2Wheel(r.tt);
-  let cc = "";
-  if (!c2) cc = '<div class="hop small muted">Cần ít nhất 100 vòng để chạy kiểm định. Hiện có ' + n + ".</div>";
-  else {
-    const nghi = c2.p < 0.05;
-    cc = '<div class="hop"><div class="so-lieu">' +
+  $("khoiChi2").innerHTML = !c2
+    ? '<div class="trong">Cần ít nhất 100 vòng để chạy kiểm định. Hiện có ' + n + ".</div>"
+    : '<div class="hop"><div class="so-lieu">' +
       '<div><div class="nhan">Chi bình phương</div><div class="gt">' + c2.x.toFixed(1) + "</div></div>" +
       '<div><div class="nhan">Bậc tự do</div><div class="gt">' + c2.df + "</div></div>" +
       '<div><div class="nhan">Giá trị p</div><div class="gt">' + c2.p.toFixed(4) + "</div></div>" +
       '<div><div class="nhan">Kết luận</div><div class="gt" style="color:' +
-      (nghi ? "var(--cung)" : "var(--nga-mo)") + '">' + (nghi ? "đáng nghi" : "chưa thấy lệch") +
-      "</div></div></div>" + '<div class="dien-giai">' +
-      (nghi ? "Phân bố 37 ô lệch hơn mức ngẫu nhiên thường tạo ra. Chưa đủ kết luận, cần thu thêm dữ liệu trên đúng bánh xe vật lý này."
-            : "Phân bố 37 ô đang phù hợp với bánh xe cân. Khi đó mọi cách chọn số đều cho đúng âm 2,70%.") +
-      " Cần khoảng <b>5.500 vòng</b> để phát hiện mức lệch vừa đủ vượt ngưỡng hoà vốn ở 2\u03c3.</div></div>";
-  }
-  $("khoiChi2").innerHTML = cc;
+      (c2.p < 0.05 ? "var(--vang)" : "var(--nga-mo)") + '">' +
+      (c2.p < 0.05 ? "đáng nghi" : "chưa thấy lệch") + "</div></div></div>" +
+      '<div class="dien-giai">' +
+      (c2.p < 0.05
+        ? "Phân bố 37 ô lệch hơn mức ngẫu nhiên thường tạo ra. Cần thu thêm dữ liệu trên đúng bánh xe này."
+        : "Phân bố 37 ô đang phù hợp với bánh xe cân. Khi đó mọi đội hình đều cho đúng âm 2,70%, và việc một đội hình trúng cao hơn chỉ là may rủi.") +
+      " Số 0 đã ra " + r.zero + " lần kể từ khi khoá, mỗi lần đều thua cả 6 cửa.</div></div>";
 }
 
 function veLaiNhap(){
@@ -764,30 +741,6 @@ function veLaiNhap(){
     h += "</div>";
   }
   w.innerHTML = h + "</div>";
-}
-
-function doNguongNhieu(){
-  const b = $("nutNhieu");
-  b.disabled = true; b.textContent = "Đang chạy\u2026";
-  setTimeout(() => {
-    const cfg = cauHinh(), r = nguongNhieu(cfg, 60, 400);
-    let h = "";
-    if (!r) h = '<div class="trong">Không đo được.</div>';
-    else {
-      const phuC = cfg.SO_VUNG * cfg.CO_VUNG;
-      h = '<div class="hop" style="margin-top:12px"><div class="so-lieu">' +
-        '<div><div class="nhan">Vòng mô phỏng</div><div class="gt">' + r.vao.toLocaleString("vi-VN") + "</div></div>" +
-        '<div><div class="nhan">6 street trúng</div><div class="gt">' + (r.tyLe*100).toFixed(2) +
-        '%<span class="small muted"> / kv 48,65%</span></div></div>' +
-        '<div><div class="nhan">Vùng hàng xóm trúng</div><div class="gt">' + (r.cung*100).toFixed(2) +
-        '%<span class="small muted"> / kv ' + (phuC/37*100).toFixed(2) + "%</span></div></div></div>" +
-        '<div class="dien-giai">Chạy đúng hai phương án này trên bánh xe châu Âu hoàn toàn cân. ' +
-        "Con số bám quanh kỳ vọng nghĩa là không phương án nào chứa thông tin, và đó là điều " +
-        "phải xảy ra khi không có lệch vật lý.</div></div>";
-    }
-    $("ketQuaNhieu").innerHTML = h;
-    b.disabled = false; b.textContent = "Đo ngưỡng nhiễu";
-  }, 30);
 }
 
 SPINS = doc();
